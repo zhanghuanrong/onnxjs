@@ -78,6 +78,10 @@ export class Attribute {
     return this.get(key, 'tensors', defaultValue);
   }
 
+  forEach(callbackFn: (name: string, type: Attribute.DataType, value: ValueTypes) => void) {
+    this._attributes.forEach((v, k) => callbackFn(k, v[1], v[0]));
+  }
+
   private get<V extends Attribute.DataTypeMap[Attribute.DataType]>(
       key: string, type: Attribute.DataType, defaultValue?: V): V {
     const valueAndType = this._attributes.get(key);

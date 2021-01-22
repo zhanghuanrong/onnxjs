@@ -10,8 +10,8 @@ export interface OpSet {
 }
 
 export declare namespace OpSet {
-  interface OperatorConstructor {
-    (node: Graph.Node): Operator;
+  interface OperatorConstructor<T> {
+    (node: Graph.Node, opset: OpSet): T;
   }
 
   /**
@@ -22,11 +22,11 @@ export declare namespace OpSet {
   /**
    * A resolve rule consists of 4 items: opType, opSetDomain, versionSelector and operatorConstructor
    */
-  type ResolveRule = [string, Domain, string, OperatorConstructor];
+  type ResolveRule<T = Operator> = [string, Domain, string, OperatorConstructor<T>];
 }
 
-export function resolveOperator(
-    node: Graph.Node, opsets: ReadonlyArray<OpSet>, rules: ReadonlyArray<OpSet.ResolveRule>) {
+export function resolveOperator<T = Operator>(
+    node: Graph.Node, opsets: ReadonlyArray<OpSet>, rules: ReadonlyArray<OpSet.ResolveRule<T>>) {
   for (const rule of rules) {
     const opType = rule[0];
     const domain = rule[1];
@@ -38,7 +38,7 @@ export function resolveOperator(
         // opset '' and 'ai.onnx' are considered the same.
         if (opset.domain === domain || (opset.domain === 'ai.onnx' && domain === '')) {  // opset domain found
           if (matchSelector(opset.version, versionSelector)) {
-            return opConstructor(node);
+            return opConstructor(node, opset);
           }
         }
       }

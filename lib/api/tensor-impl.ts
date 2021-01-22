@@ -69,6 +69,8 @@ export class Tensor implements TensorInterface {
     const value = this.internalTensor.get(indexArray);
     if (this.type === 'bool') {
       return value === 1 ? true : false;
+    } else if (typeof value === 'bigint') {
+      return Number(value);
     }
     return value;
   }

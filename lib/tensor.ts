@@ -18,6 +18,8 @@ export declare namespace Tensor {
     uint16: Uint16Array;
     int32: Int32Array;
     uint32: Uint32Array;
+    int64: BigInt64Array;
+    uint64: BigUint64Array;
   }
 
   export type DataType = keyof DataTypeMap;
@@ -26,6 +28,7 @@ export declare namespace Tensor {
   export type BooleanType = Tensor.DataTypeMap['bool'];
   export type IntegerType = Tensor.DataTypeMap['int8']|Tensor.DataTypeMap['uint8']|Tensor.DataTypeMap['int16']|
                             Tensor.DataTypeMap['uint16']|Tensor.DataTypeMap['int32']|Tensor.DataTypeMap['uint32'];
+  export type BigIntType = Tensor.DataTypeMap['int64']|Tensor.DataTypeMap['uint64'];
   export type FloatType = Tensor.DataTypeMap['float32']|Tensor.DataTypeMap['float64'];
   export type NumberType = BooleanType|IntegerType|FloatType;
 
@@ -83,6 +86,16 @@ export class Tensor {
 
       default:
         throw new TypeError(`data type is not integer (uint8, int8, uint16, int16, int32, uint32, bool)`);
+    }
+  }
+
+  get bigintData() {
+    switch (this.type) {
+      case 'int64':
+      case 'uint64':
+        return this.data as Tensor.BigIntType;
+      default:
+        throw new TypeError(`data type is not bigint (int64, uint64)`);
     }
   }
 
@@ -323,6 +336,8 @@ function sizeof(type: Tensor.DataType): number {
     case 'float32':
       return 4;
     case 'float64':
+    case 'uint64':
+    case 'int64':
       return 8;
     default:
       throw new Error(`cannot calculate sizeof() on type ${type}`);
@@ -370,6 +385,10 @@ function dataviewConstructor(type: Tensor.DataType) {
       return Int32Array;
     case 'uint32':
       return Uint32Array;
+    case 'int64':
+      return BigInt64Array;
+    case 'uint64':
+      return BigUint64Array;
     case 'float32':
       return Float32Array;
     case 'float64':
@@ -380,14 +399,18 @@ function dataviewConstructor(type: Tensor.DataType) {
   }
 }
 
-// convert a long number to a 32-bit integer (cast-down)
-function longToNumber(i: Long, type: onnx.TensorProto.DataType): number {
+// convert a long number to a bigint or 32-bit integer (cast-down)
+function longToNumber(i: Long, type: onnx.TensorProto.DataType): number|bigint {
   // INT64, UINT32, UINT64
-  if (type === onnx.TensorProto.DataType.INT64) {
+  if (type === onnx.TensorProto.DataType.INT64 || type === onnx.TensorProto.DataType.UINT64) {
+    return BigInt(i.toString());
+  }
+
+  if (type === onnx.TensorProto.DataType.INT32) {
     if (i.greaterThanOrEqual(2147483648) || i.lessThan(-2147483648)) {
       throw new TypeError('int64 is not supported');
     }
-  } else if (type === onnx.TensorProto.DataType.UINT32 || type === onnx.TensorProto.DataType.UINT64) {
+  } else if (type === onnx.TensorProto.DataType.UINT32) {
     if (i.greaterThanOrEqual(4294967296) || i.lessThan(0)) {
       throw new TypeError('uint64 is not supported');
     }
@@ -399,7 +422,7 @@ function longToNumber(i: Long, type: onnx.TensorProto.DataType): number {
 }
 
 // read one value from TensorProto
-function readProto(view: DataView, type: onnx.TensorProto.DataType, byteOffset: number): number {
+function readProto(view: DataView, type: onnx.TensorProto.DataType, byteOffset: number): number|bigint {
   switch (type) {
     case onnx.TensorProto.DataType.BOOL:
     case onnx.TensorProto.DataType.UINT8:
@@ -417,13 +440,15 @@ function readProto(view: DataView, type: onnx.TensorProto.DataType, byteOffset: 
     case onnx.TensorProto.DataType.UINT32:
       return view.getUint32(byteOffset, true);
     case onnx.TensorProto.DataType.INT64:
-      return longToNumber(
-          Long.fromBits(view.getUint32(byteOffset, true), view.getUint32(byteOffset + 4, true), false), type);
+      return view.getBigInt64(byteOffset, true);
+      // return longToNumber(
+      //     Long.fromBits(view.getUint32(byteOffset, true), view.getUint32(byteOffset + 4, true), false), type);
     case onnx.TensorProto.DataType.DOUBLE:
       return view.getFloat64(byteOffset, true);
     case onnx.TensorProto.DataType.UINT64:
-      return longToNumber(
-          Long.fromBits(view.getUint32(byteOffset, true), view.getUint32(byteOffset + 4, true), true), type);
+      return view.getBigUint64(byteOffset, true);
+      // return longToNumber(
+      //     Long.fromBits(view.getUint32(byteOffset, true), view.getUint32(byteOffset + 4, true), true), type);
     default:
       throw new Error(`cannot read from DataView for type ${onnx.TensorProto.DataType[type]}`);
   }

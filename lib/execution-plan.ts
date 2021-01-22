@@ -11,7 +11,11 @@ class KernelOp {
   constructor(public op: Operator, public node: Graph.Node) {}
 }
 
-export class ExecutionPlan {
+export interface ExecutionPlan {
+  execute(sessionHandler: SessionHandler, modelInputs: Tensor[]): Promise<Tensor[]>;
+}
+
+export class ExecutionPlanImpl {
   constructor(private graph: Graph, ops: Operator[], private profiler: Readonly<Profiler>) {
     this.initialize(ops);
   }

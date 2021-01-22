@@ -164,8 +164,8 @@ export class BroadcastUtil {
    * @returns The result tensor, or undefined if input not broadcastable.
    */
   static calc(
-      a: Tensor, b: Tensor, op: (a: string|number, b: string|number) => (string | number), inplace: boolean,
-      resultType?: Tensor.DataType): Tensor|undefined {
+      a: Tensor, b: Tensor, op: (a: string|number|bigint, b: string|number|bigint) => (string | number | bigint),
+      inplace: boolean, resultType?: Tensor.DataType): Tensor|undefined {
     const outputShape = BroadcastUtil.calcShape(a.dims, b.dims);
 
     if (outputShape) {
@@ -187,8 +187,8 @@ export class BroadcastUtil {
         const outputIndices = new Array<number>(outputShape.length);
         const originalIndicesA = new Array(a.dims.length);
         const originalIndicesB = new Array(b.dims.length);
-        let valA: string|number = 0;
-        let valB: string|number = 0;
+        let valA: string|number|bigint = 0;
+        let valB: string|number|bigint = 0;
         let isAScalar = false;
         let isBScalar = false;
         if (a.dims.length === 0) {
@@ -348,9 +348,9 @@ export class ProtoUtil {
       // For INT64/UINT64, reduce their value to 32-bits.
       // Should throw exception when overflow
       case onnx.TensorProto.DataType.INT64:
-        return 'int32';
+        return 'int64';
       case onnx.TensorProto.DataType.UINT64:
-        return 'uint32';
+        return 'uint64';
 
       default:
         throw new Error(`unsupported data type: ${onnx.TensorProto.DataType[typeProto]}`);

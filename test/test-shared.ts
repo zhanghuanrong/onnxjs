@@ -43,6 +43,7 @@ export function createMockGraph(opType: string, attributes: Attribute): Graph {
     getOutputIndices: () => [],
     getOutputNames: () => [],
     getNodes: () => [node],
-    getValues: () => []
+    getValues: () => [],
+    getValueTypes: () => []
   };
 }

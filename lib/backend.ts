@@ -1,6 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+import {ExecutionPlan} from './execution-plan';
 import {Graph} from './graph';
 import {Operator} from './operators';
 import {OpSet} from './opset';
@@ -42,7 +43,7 @@ export interface SessionHandler {
    * This method let's the sessionHandler know that the graph initialization is complete
    * @param graph the completely initialized graph
    */
-  onGraphInitialized?(graph: Graph): void;
+  onGraphInitialized?(graph: Graph, opset: ReadonlyArray<OpSet>): void;
 
   /**
    * a reference to the corresponding backend
@@ -53,6 +54,11 @@ export interface SessionHandler {
    * a reference to the session context
    */
   readonly context: Session.Context;
+
+  /**
+   * a custom execution plan
+   */
+  customExecutionPlan?: ExecutionPlan;
 }
 
 export interface Backend {

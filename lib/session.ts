@@ -5,7 +5,7 @@ import {readFile} from 'fs';
 import {promisify} from 'util';
 
 import {Backend, SessionHandlerType} from './backend';
-import {ExecutionPlan} from './execution-plan';
+import {ExecutionPlan, ExecutionPlanImpl} from './execution-plan';
 import {Graph} from './graph';
 import {Profiler} from './instrument';
 import {Model} from './model';
@@ -86,13 +86,18 @@ export class Session {
 
       // graph is completely initialzied at this stage , let the interested handlers know
       if (this.sessionHandler.onGraphInitialized) {
-        this.sessionHandler.onGraphInitialized(this._model.graph);
+        this.sessionHandler.onGraphInitialized(this._model.graph, this._model.opsets);
       }
-      // initialize each operator in the graph
-      this.initializeOps(this._model.graph);
 
-      // instantiate an ExecutionPlan object to be used by the Session object
-      this._executionPlan = new ExecutionPlan(this._model.graph, this._ops, this.profiler);
+      if (this.sessionHandler.customExecutionPlan) {
+        this._executionPlan = this.sessionHandler.customExecutionPlan;
+      } else {
+        // initialize each operator in the graph
+        this.initializeOps(this._model.graph);
+
+        // instantiate an ExecutionPlan object to be used by the Session object
+        this._executionPlan = new ExecutionPlanImpl(this._model.graph, this._ops, this.profiler);
+      }
     });
 
     this._initialized = true;

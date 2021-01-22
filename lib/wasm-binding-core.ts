@@ -1,8 +1,31 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+export declare interface InferenceContext {
+  new(numOperators: number, numValues: number, valueTypes: ReadonlyArray<number>): InferenceContext;
+
+  setInput(valueIndex: number, dims: ReadonlyArray<number>): void;
+  setInitializer(valueIndex: number, dims: ReadonlyArray<number>): void;
+
+  addAttribute_i(nodeIndex: number, name: string, value: number): void;
+  addAttribute_ints(nodeIndex: number, name: string, values: number[]): void;
+  addAttribute_f(nodeIndex: number, name: string, value: number): void;
+  addAttribute_floats(nodeIndex: number, name: string, values: number[]): void;
+
+  initKernel(
+      nodeIndex: number, opType: string, opset: string, opsetVersion: number, inputsIndices: ReadonlyArray<number>,
+      outputsIndices: ReadonlyArray<number>, unused: string): void;
+  getTensorData(index: number): number;
+  getTensorDataSize(index: number): number;
+  getTensorShape(index: number): number[];
+
+  run(): void;
+}
+
 declare interface OnnxWasmBindingJs {
   (self: OnnxWasmBindingJs): Promise<void>;
+
+  InferenceContext: InferenceContext;
 
   _malloc: (ptr: number) => number;
   _free: (ptr: number) => void;
@@ -70,7 +93,8 @@ export function init(): Promise<void> {
 
   return new Promise<void>((resolve, reject) => {
     // tslint:disable-next-line:no-require-imports
-    binding = require('../dist/onnx-wasm') as OnnxWasmBindingJs;
+    // binding = require('../dist/onnx-wasm') as OnnxWasmBindingJs;
+    binding = require('../dist/out_wasm_main') as OnnxWasmBindingJs;
     binding(binding).then(
         () => {
           // resolve init() promise
@@ -325,6 +349,11 @@ export class WasmBinding {
       binding!._free(this.ptr8);
     }
   }
+}
+
+// TODO: revise this function
+export function getInstance(): OnnxWasmBindingJs {
+  return binding!;
 }
 
 /**

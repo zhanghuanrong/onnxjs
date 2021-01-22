@@ -66,6 +66,7 @@ export interface Graph {
   getOutputIndices(): ReadonlyArray<number>;
   getOutputNames(): ReadonlyArray<string>;
   getValues(): ReadonlyArray<Graph.Value>;
+  getValueTypes(): ReadonlyArray<onnx.TensorProto.DataType>;
   getNodes(): ReadonlyArray<Graph.Node>;
 }
 
@@ -121,6 +122,7 @@ class Node implements Graph.Node {
 
 class GraphImpl implements Graph, Graph.Transformer {
   private _allData: Value[];
+  private _allTypes: Array<onnx.TensorProto.DataType>;
 
   private _allInputIndices: number[];
   private _allInputNames: string[];
@@ -165,6 +167,10 @@ class GraphImpl implements Graph, Graph.Transformer {
     return this._allData;
   }
 
+  getValueTypes(): ReadonlyArray<onnx.TensorProto.DataType> {
+    return this._allTypes;
+  }
+
   getNodes(): ReadonlyArray<Graph.Node> {
     return this._nodes;
   }
@@ -172,6 +178,7 @@ class GraphImpl implements Graph, Graph.Transformer {
   private buildGraph(graph: onnx.IGraphProto) {
     const dataIndices = new Map<string, number>();
     this._allData = [];
+    this._allTypes = [];
 
     this._allInputIndices = [];
     this._allInputNames = [];
@@ -193,6 +200,7 @@ class GraphImpl implements Graph, Graph.Transformer {
         throw new Error(`duplicated input name: ${i.name}`);
       }
       const currentIndex = this._allData.push(new Value(i)) - 1;
+      this._allTypes.push(i.type!.tensorType!.elemType!);
       dataIndices.set(i.name!, currentIndex);
       inputValueNames.push(i.name!);
     }
@@ -210,6 +218,7 @@ class GraphImpl implements Graph, Graph.Transformer {
           tensorType: ProtoUtil.tensorDataTypeFromProto(i.dataType!)
         };
         index = this._allData.push(value) - 1;
+        this._allTypes.push(i.dataType!);
         dataIndices.set(i.name!, index);
       }
       this._allData[index]._from = -1;
@@ -233,6 +242,7 @@ class GraphImpl implements Graph, Graph.Transformer {
         throw new Error(`duplicated output name: ${i.name}`);
       }
       const currentIndex = this._allData.push(new Value(i)) - 1;
+      this._allTypes.push(i.type!.tensorType!.elemType!);
       dataIndices.set(i.name!, currentIndex);
       this._allOutputIndices.push(currentIndex);
       this._allOutputNames.push(i.name!);
@@ -272,6 +282,7 @@ class GraphImpl implements Graph, Graph.Transformer {
         let dataIndex = dataIndices.get(output);
         if (typeof dataIndex === 'undefined') {
           dataIndex = this._allData.push(new Value()) - 1;
+          this._allTypes.push(onnx.TensorProto.DataType.UNDEFINED);
           dataIndices.set(output, dataIndex);
         }
         node.outputs.push(dataIndex);
