@@ -16,4 +16,4 @@ export class Reshape implements OperatorInfo {
   get hash() {
     return '';
   }
-};
+}

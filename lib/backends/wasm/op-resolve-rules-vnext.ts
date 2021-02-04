@@ -11,6 +11,7 @@ import {Gather} from './ops-vnext/gather';
 import {Gemm} from './ops-vnext/gemm';
 import {MatMul} from './ops-vnext/matmul';
 import {Reshape} from './ops-vnext/reshape';
+import {Resize} from './ops-vnext/resize';
 import {Slice} from './ops-vnext/slice';
 import {Unsqueeze} from './ops-vnext/unsqueeze';
 
@@ -23,7 +24,9 @@ export const OP_INFO_RESOLVE_RULES: ReadonlyArray<OpSet.ResolveRule<OperatorInfo
   ['MatMul', '', '1+', (node, opset) => new MatMul(opset)],
   ['Mul', '', '7+', (node, opset) => new BinaryOp('Mul', opset)],
   ['Reshape', '', '5+', (node, opset) => new Reshape(opset)],
+  ['Resize', '', '10+', (node, opset) => new Resize(opset)],
   ['Sigmoid', '', '5+', (node, opset) => new ElementWise('Sigmoid', opset)],
   ['Tanh', '', '6+', (node, opset) => new ElementWise('Tanh', opset)],
   ['Unsqueeze', '', '1+', (node, opset) => new Unsqueeze(opset)],
+  ['Upsample', '', '7+', (node, opset) => new Resize(opset, false)],
 ];

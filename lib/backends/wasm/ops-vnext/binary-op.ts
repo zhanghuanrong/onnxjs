@@ -16,4 +16,4 @@ export class BinaryOp implements OperatorInfo {
   get hash() {
     return '';
   }
-};
+}

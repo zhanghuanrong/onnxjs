@@ -21,4 +21,4 @@ export class Gemm implements OperatorInfo {
   get hash() {
     return '';
   }
-};
+}

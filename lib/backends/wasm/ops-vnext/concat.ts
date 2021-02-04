@@ -16,4 +16,4 @@ export class Concat implements OperatorInfo {
   get hash() {
     return '';
   }
-};
+}

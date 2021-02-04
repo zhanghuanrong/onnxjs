@@ -18,4 +18,4 @@ export class Gather implements OperatorInfo {
   get hash() {
     return '';
   }
-};
+}

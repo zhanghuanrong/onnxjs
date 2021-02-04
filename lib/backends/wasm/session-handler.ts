@@ -88,7 +88,7 @@ export class WasmSessionHandler implements SessionHandler {
           case 'float':
             this.wasmContext.addAttribute_f(i, name, value as number);
             break;
-          case 'float':
+          case 'floats':
             this.wasmContext.addAttribute_floats(i, name, value as number[]);
             break;
           case 'int':
@@ -96,6 +96,12 @@ export class WasmSessionHandler implements SessionHandler {
             break;
           case 'ints':
             this.wasmContext.addAttribute_ints(i, name, (value as number[]).map(safeInt32));
+            break;
+          case 'string':
+            this.wasmContext.addAttribute_s(i, name, (value as string));
+            break;
+          case 'strings':
+            this.wasmContext.addAttribute_strings(i, name, (value as string[]));
             break;
           default:
             throw new Error(`unsupported attribute type: ${type}`);
