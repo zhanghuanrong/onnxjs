@@ -20,4 +20,4 @@ export class Slice implements OperatorInfo {
   get hash() {
     return '';
   }
-};
+}

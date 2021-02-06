@@ -122,7 +122,7 @@ class Node implements Graph.Node {
 
 class GraphImpl implements Graph, Graph.Transformer {
   private _allData: Value[];
-  private _allTypes: Array<onnx.TensorProto.DataType>;
+  private _allTypes: onnx.TensorProto.DataType[];
 
   private _allInputIndices: number[];
   private _allInputNames: string[];

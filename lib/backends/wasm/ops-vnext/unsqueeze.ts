@@ -16,4 +16,4 @@ export class Unsqueeze implements OperatorInfo {
   get hash() {
     return '';
   }
-};
+}

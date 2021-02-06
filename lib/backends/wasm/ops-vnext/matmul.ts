@@ -16,4 +16,4 @@ export class MatMul implements OperatorInfo {
   get hash() {
     return '';
   }
-};
+}

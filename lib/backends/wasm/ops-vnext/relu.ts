@@ -4,7 +4,7 @@ import {Attribute} from '../../../attribute';
 import {OpSet} from '../../../opset';
 import {OperatorInfo} from '../op-vnext';
 
-export class Reshape implements OperatorInfo {
+export class Relu implements OperatorInfo {
   constructor(public opset: OpSet) {}
 
   inferenceType(inputTypes: readonly onnx.TensorProto.DataType[]): onnx.TensorProto.DataType[] {

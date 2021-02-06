@@ -16,4 +16,4 @@ export class ElementWise implements OperatorInfo {
   get hash() {
     return '';
   }
-};
+}

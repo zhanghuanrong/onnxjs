@@ -2,6 +2,7 @@
 // Licensed under the MIT license.
 
 export declare interface InferenceContext {
+  // tslint:disable-next-line:no-misused-new
   new(numOperators: number, numValues: number, valueTypes: ReadonlyArray<number>): InferenceContext;
 
   setInput(valueIndex: number, dims: ReadonlyArray<number>): void;
@@ -11,6 +12,8 @@ export declare interface InferenceContext {
   addAttribute_ints(nodeIndex: number, name: string, values: number[]): void;
   addAttribute_f(nodeIndex: number, name: string, value: number): void;
   addAttribute_floats(nodeIndex: number, name: string, values: number[]): void;
+  addAttribute_s(nodeIndex: number, name: string, values: string): void;
+  addAttribute_strings(nodeIndex: number, name: string, values: string[]): void;
 
   initKernel(
       nodeIndex: number, opType: string, opset: string, opsetVersion: number, inputsIndices: ReadonlyArray<number>,
@@ -94,6 +97,7 @@ export function init(): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     // tslint:disable-next-line:no-require-imports
     // binding = require('../dist/onnx-wasm') as OnnxWasmBindingJs;
+    // tslint:disable-next-line:no-require-imports
     binding = require('../dist/out_wasm_main') as OnnxWasmBindingJs;
     binding(binding).then(
         () => {
