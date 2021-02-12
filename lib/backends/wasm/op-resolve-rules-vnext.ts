@@ -8,10 +8,14 @@ import {BinaryOp} from './ops-vnext/binary-op';
 import {Concat} from './ops-vnext/concat';
 import {Conv} from './ops-vnext/conv';
 import {ElementWise} from './ops-vnext/element-wise';
+import {FusedConv} from './ops-vnext/fused-conv';
 import {Gather} from './ops-vnext/gather';
 import {Gemm} from './ops-vnext/gemm';
+import {ConvNchwc} from './ops-vnext/hchwc-conv';
 import {MatMul} from './ops-vnext/matmul';
 import {Relu} from './ops-vnext/relu';
+import {ReorderInput} from './ops-vnext/reorder_input';
+import {ReorderOutput} from './ops-vnext/reorder_output';
 import {Reshape} from './ops-vnext/reshape';
 import {Resize} from './ops-vnext/resize';
 import {Slice} from './ops-vnext/slice';
@@ -20,7 +24,11 @@ import {Unsqueeze} from './ops-vnext/unsqueeze';
 export const OP_INFO_RESOLVE_RULES: ReadonlyArray<OpSet.ResolveRule<OperatorInfo>> = [
   ['Add', '', '7+', (node, opset) => new BinaryOp('Add', opset)],
   ['Concat', '', '4+', (node, opset) => new Concat(opset)],
+  ['Conv', 'com.microsoft.nchwc', '1+', (node, opset) => new ConvNchwc(opset)],
+  ['ReorderInput', 'com.microsoft.nchwc', '1+', (node, opset) => new ReorderInput(opset)],
+  ['ReorderOutput', 'com.microsoft.nchwc', '1+', (node, opset) => new ReorderOutput(opset)],
   ['Conv', '', '1+', (node, opset) => new Conv(opset)],
+  ['FusedConv', 'com.microsoft', '1+', (node, opset) => new FusedConv(opset)],
   ['Gather', '', '1+', (node, opset) => new Gather(opset)],
   ['Gemm', '', '7+', (node, opset) => new Gemm(opset)],
   ['Slice', '', '1+', (node, opset) => new Slice(opset)],

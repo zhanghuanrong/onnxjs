@@ -69,7 +69,7 @@ module.exports = function (config) {
     browserSocketTimeout: 60000,
     hostname: getMachineIpAddress(),
     customLaunchers: {
-      ChromeTest: { base: 'Chrome', flags: ['--window-size=1,1'] },
+      ChromeTest: { base: 'Chrome', flags: ['--window-size=1,1', '--enable-features=WebAssemblySimd'] },
       ChromeDebug: { debug: true, base: 'Chrome', flags: ['--remote-debugging-port=9333'] },
       //
       // ==== BrowserStack browsers ====

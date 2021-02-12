@@ -243,6 +243,13 @@ export async function runModelTestSet(context: ModelTestContext, testCase: Test.
       context.perfData.runs.push(end - start);
     }
     context.perfData.count++;
+    console.log('------first run latency is------');
+
+    // for (let kadsf = 1; kadsf <= 50; kadsf++) {
+    //   console.log('---- Run#', kadsf, ':');
+    //   await context.session.run(testCase.inputs!);
+    //   console.log('---- Finished Run#', kadsf, ':');
+    // }
 
     Logger.verbose('TestRunner', `Finished running model from file: ${testCase.name}`);
     Logger.verbose('TestRunner', ` Stats:`);

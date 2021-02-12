@@ -17,7 +17,7 @@ export declare namespace OpSet {
   /**
    * Domain of an opset, it can be an empty string(default value, represent for ai.onnx), or 'ai.onnx.ml'
    */
-  type Domain = ''|'ai.onnx.ml';
+  type Domain = ''|'ai.onnx.ml'|'com.microsoft'|'com.microsoft.nchwc';
 
   /**
    * A resolve rule consists of 4 items: opType, opSetDomain, versionSelector and operatorConstructor
