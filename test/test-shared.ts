@@ -36,7 +36,7 @@ async function readFile(file: string) {
  * create a single-node graph for unit test purpose
  */
 export function createMockGraph(opType: string, attributes: Attribute): Graph {
-  const node: Graph.Node = {name: '', opType, inputs: [], outputs: [], attributes};
+  const node: Graph.Node = {name: '', opType, domain: '', inputs: [], outputs: [], attributes};
   return {
     getInputIndices: () => [],
     getInputNames: () => [],

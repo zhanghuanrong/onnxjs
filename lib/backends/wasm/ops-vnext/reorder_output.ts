@@ -12,8 +12,8 @@ export class ReorderOutput implements OperatorInfo {
   }
 
   initializeAttributes(attribute: Attribute): void {
-    attribute.set('channels', 'int', attribute.getInt('channels', 0));
-    attribute.set('channels_last', 'int', attribute.getInt('channels_last', 0));
+    // attribute.set('channels', 'int', attribute.getInt('channels', undefined));
+    // attribute.set('channels_last', 'int', attribute.getInt('channels_last', undefined));
   }
 
   get hash() {

@@ -40,6 +40,10 @@ export class Attribute {
     }
   }
 
+  contains(key: string): boolean {
+    return this._attributes.has(key);
+  }
+
   set(key: string, type: Attribute.DataType, value: ValueTypes): void {
     this._attributes.set(key, [value, type]);
   }

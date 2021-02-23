@@ -17,7 +17,7 @@ export declare interface InferenceContext {
 
   initKernel(
       nodeIndex: number, opType: string, opset: string, opsetVersion: number, inputsIndices: ReadonlyArray<number>,
-      outputsIndices: ReadonlyArray<number>, unused: string): void;
+      outputsIndices: ReadonlyArray<number>, unused: string, nodeName: string): void;
   getTensorData(index: number): number;
   getTensorDataSize(index: number): number;
   getTensorShape(index: number): number[];

@@ -96,7 +96,7 @@ https.get('https://raw.githubusercontent.com/onnx/onnx/v1.7.0/onnx/defs/operator
 });
 
 function checkSupport(type: string, range: [number, number], rules: ReadonlyArray<OpSet.ResolveRule>) {
-  const node = {name: '', opType: type, inputs: [], outputs: [], attributes: new Attribute(undefined)};
+  const node = {name: '', opType: type, domain: '', inputs: [], outputs: [], attributes: new Attribute(undefined)};
   for (let i = range[0]; i <= range[1]; i++) {
     try {
       resolveOperator(node, [{domain: '', version: i}], rules);

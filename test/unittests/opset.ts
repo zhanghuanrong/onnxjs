@@ -76,8 +76,8 @@ describe('#UnitTest# - resolve rules', () => {
   });
 });
 
-function createTestGraphNode(name: string, opType: string): Graph.Node {
-  return {name, opType, inputs: [], outputs: [], attributes: new Attribute(null)};
+function createTestGraphNode(name: string, opType: string, domain: string = ''): Graph.Node {
+  return {name, opType, domain, inputs: [], outputs: [], attributes: new Attribute(null)};
 }
 
 function dummyOpConstructor(): Operator {

@@ -35,6 +35,9 @@ export declare namespace Graph {
     // the operator type
     readonly opType: string;
 
+    // the operator type
+    readonly domain: string;
+
     // indices to the Values where the inputs come from.
     readonly inputs: ReadonlyArray<number>;
 
@@ -106,6 +109,7 @@ class Node implements Graph.Node {
   constructor(_nodeProto: onnx.INodeProto) {
     this.name = _nodeProto.name!;
     this.opType = _nodeProto.opType!;
+    this.domain = _nodeProto.domain!;
     this.inputs = [];
     this.outputs = [];
     this.attributes = new Attribute(_nodeProto.attribute);
@@ -114,6 +118,7 @@ class Node implements Graph.Node {
 
   name: string;
   opType: string;
+  domain: string;
   inputs: number[];
   outputs: number[];
   attributes: Attribute;

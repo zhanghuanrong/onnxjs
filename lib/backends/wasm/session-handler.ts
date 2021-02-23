@@ -40,6 +40,7 @@ export class WasmSessionHandler implements SessionHandler {
     const types = graph.getValueTypes().slice();
     const ops = graph.getNodes().map(node => resolveOperator<OperatorInfo>(node, opset, OP_INFO_RESOLVE_RULES));
     ops.forEach((op, i) => {
+      // console.log('    ====op @', i, '  opset:', op.opset.domain);
       const node = graph.getNodes()[i];
       const inputTypes = node.inputs.map(i => types[i]);
 
@@ -113,7 +114,7 @@ export class WasmSessionHandler implements SessionHandler {
     ops.forEach((op, i) => {
       const node = graph.getNodes()[i];
       this.wasmContext.initKernel(
-          i, node.opType, opset[0].domain, opset[0].version, node.inputs, node.outputs, op.hash);
+          i, node.opType, op.opset.domain, op.opset.version, node.inputs, node.outputs, op.hash, node.name);
     });
 
     // ExecutionPlan implementation

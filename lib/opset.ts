@@ -17,7 +17,7 @@ export declare namespace OpSet {
   /**
    * Domain of an opset, it can be an empty string(default value, represent for ai.onnx), or 'ai.onnx.ml'
    */
-  type Domain = ''|'ai.onnx.ml'|'com.microsoft'|'com.microsoft.nchwc';
+  type Domain = ''|'ai.onnx'|'ai.onnx.ml'|'com.microsoft'|'com.microsoft.nchwc';
 
   /**
    * A resolve rule consists of 4 items: opType, opSetDomain, versionSelector and operatorConstructor
@@ -33,9 +33,11 @@ export function resolveOperator<T = Operator>(
     const versionSelector = rule[2];
     const opConstructor = rule[3];
 
-    if (node.opType === opType) {  // operator type matches
+    // opset '' and 'ai.onnx' are considered the same.
+    if (node.opType === opType &&
+        (node.domain === domain || (domain === '' && node.domain === 'ai.onnx') ||
+         (node.domain === '' && domain === 'ai.onnx'))) {  // operator type matches and domain matches
       for (const opset of opsets) {
-        // opset '' and 'ai.onnx' are considered the same.
         if (opset.domain === domain || (opset.domain === 'ai.onnx' && domain === '')) {  // opset domain found
           if (matchSelector(opset.version, versionSelector)) {
             return opConstructor(node, opset);
