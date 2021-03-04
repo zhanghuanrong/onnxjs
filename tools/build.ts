@@ -41,7 +41,7 @@ const OUT_WASM = path.join(OUT, 'onnx-wasm.wasm');
 const BUILD_OPTIONS = [
   '-I' + DEPS_EIGEN,
   '-DEIGEN_MPL2_ONLY',
-  '-std=c++11',
+  '-std=c++14',
   '-s WASM=1',
   '-s NO_EXIT_RUNTIME=0',
   '-s ALLOW_MEMORY_GROWTH=1',
@@ -53,7 +53,7 @@ const BUILD_OPTIONS = [
   '-s VERBOSE=0',
   '-s EXPORT_ALL=0',
   '-o ' + OUT_WASM_JS,
-  '-O2',
+  '-O3',
   '--llvm-lto 3',
 ];
 
